@@ -1,0 +1,409 @@
+---
+title: "Assignment"
+author: "Vishanth"
+date: "2023-10-14"
+output: pdf_document
+---
+
+------------------------------------------------------------------------
+
+### Question 1
+
+### Question 2
+
+Define both and explain the difference between (a) the expectation of a random variable and (b) the sample average?
+
+***Answer:***
+
+*(a) **Expectation of a Random Variable (Population Mean):** The expectation of a random variable, often denoted as E(X), represents the theoretical or mathematical average value of a random variable in a population or a probability distribution. It is a measure of central tendency that summarizes the long-term average behavior of the variable over an infinite number of observations. The expectation is calculated by summing the product of each possible value of the random variable and its associated probability.*
+
+*For a discrete random variable X, the expectation E(X) is calculated as:*
+
+$E(X) = \sum_{x }x \cdot P(X = x)$
+
+*(b) **Sample Average (Sample Mean):** The sample average, often denoted as XˉXˉ, represents the average value of a random variable computed from a finite sample of observations. It is a statistical measure that provides an estimate of the population mean (expectation) based on the observed data. The sample average is a point estimate and is subject to variability from one sample to another. It is calculated by summing the values in the sample and dividing by the sample size.*
+
+*For a sample of size N,*
+
+$\bar{X} = \frac{1}{N} \sum_{i=1}^{N} X_i$
+
+***Population vs. Sample:** The key difference is that the expectation (population mean) applies to the entire population or probability distribution of a random variable, which may be theoretical and infinite. In contrast, the sample average (sample mean) applies to a finite set of observed data from that population, which is typically a subset of the population.*
+
+***Estimation vs. Calculation:** The expectation is a theoretical value that characterizes the probability distribution, and it is often unknown in practice. The sample average, on the other hand, is a practical estimate of the population mean based on the observed data. It is calculated from the sample and can vary from sample to sample.*
+
+### Question 3
+
+a.  Describe the Central Limit Theorem as simply as you can.
+
+    ***Answer:***
+
+    *The Central Limit Theorem is a bit like magic for numbers. Imagine you have a big jar filled with different colored candies. You ask a friend to pick a handful of candies from the jar, count how many candies of each color they have, and then calculate the average number of candies of each color.*
+
+    *No matter how many different candy colors there are or how your friend picks the candies, something interesting happens when you repeat this process many times. The average number of candies of each color starts to form a particular shape, like a hill or a curve.*
+
+    *This shape is always the same, and it's called a bell curve. The more times your friend repeats this experiment, the closer the average number of candies of each color gets to the middle of the bell curve. It's like a magical pattern that appears no matter what candies are in the jar or how your friend picks them.*
+
+    *The Central Limit Theorem is like a superhero for math because it helps us understand and predict things in our world. Just like with candies, it can work for all sorts of situations, like predicting how tall people are, how test scores are distributed, or even how measurements in science experiments behave. It's a secret code that makes math easier and more useful in many different situations.*
+
+b.  ***Answer:***
+
+    ```{r}
+    alpha = 2
+    beta = 2
+
+    # Generate a range of values for X
+    x = seq(0, 10, by = 0.1)
+
+    # Calculate the PDF using dgamma
+    pdf_values = dgamma(x, shape = alpha, scale = beta)
+
+    # Plot the density
+    plot(x, pdf_values, type = "l", col = "blue", lwd = 2, xlab = "X", ylab = "Density",
+         main = "Density of Gamma(2, 2) Distribution")
+
+    # Add a vertical line at the mean (E[X] = αβ)
+    abline(v = alpha * beta, col = "red", lty = 2, lwd = 2)
+    #text(alpha * beta, 0.1, "E[X]", pos = 1)
+
+    # Add a legend
+    legend("topright", legend = c("Density", "E[X]"), col = c("blue", "red"), lty = c(1, 2), lwd = c(2, 2))
+
+
+
+    ```
+
+c.  ***Answer:***
+
+    ```{r}
+
+    n = 10 #Sample size of 10
+    alpha = 2
+    beta = 2
+
+    Data_Set = rgamma(n, shape = alpha , scale = beta)
+
+    Data_average = mean(Data_Set)
+
+    cat("Sample Data:", Data_Set, "\n")
+    cat("Sample Average:", Data_average, "\n")
+
+    r = 10000 #sampling size
+
+    for (i in 1:r){
+      
+      Data_Set = rgamma(n, shape = alpha, scale = beta)
+      
+      Data_average[i] = mean(Data_Set) 
+      
+      
+    }
+
+    hist(Data_average,main = "Sampling Distribution",breaks = 100)
+
+
+    #observation - It is bell curve, indicating the central limit theorem in action, with the peak of the curve located around the true population mean (which is αβ = 4 in this case).
+
+    ```
+
+    ***Observation** - It is bell curve, indicating the central limit theorem in action, with the peak of the curve located around the true population mean (which is αβ = 4 in this case).*
+
+d.  Repeat part (c) but with $n=100$. Be sure to produce and describe the histogram. Explain how this illustrates the CLT at work.
+
+    ***Answer:***
+
+    ```{r}
+    #repeating with n=100
+
+    n = 100 #Sample size of 100 (Changed to)
+    alpha = 2
+    beta = 2
+
+    Data_Set = rgamma(n, shape = alpha , scale = beta)
+
+    Data_average = mean(Data_Set)
+
+    #cat("Sample Data:", Data_Set, "\n")
+    cat("Sample Average:", Data_average, "\n")
+
+    r = 10000 #sampling size
+
+    for (i in 1:r){
+      
+      Data_Set = rgamma(n, shape = alpha, scale = beta)
+      
+      Data_average[i] = mean(Data_Set) 
+      
+      
+    }
+
+    hist(Data_average,main = "Sampling Distribution",breaks = 100)
+
+    ```
+
+***Illustration**- The resulting histogram will show a bell-shaped curve. This illustrates the CLT in action. As the sample size increases, the distribution of sample means becomes more normal, confirming the CLT's prediction that the sample means will tend toward a normal distribution with increase in size, mean will trend to be mid of the curve.*
+
+### Question 4
+
+The normal distribution is often said to have "thin tails" relative to other distributions like the $t$-distribution. Use random number generation in R to illustrate that a $N(0,1)$ distribution has much thinner tails than a $t$-distribution with 5 degrees of freedom.
+
+***Answer:***
+
+```{r}
+#install.packages("scales")
+library(scales)
+
+sample_n = 1000
+
+#n and t distribution
+nor_sample = rnorm(sample_n)
+t_sample = rt(sample_n,df=5)
+
+
+
+
+# Create histogram for the normal distribution
+hist(nor_sample, xlim = c(-5, 5), main = "Normal Distribution", xlab = "Value", col = scales::alpha("blue", 0.5))
+
+par(mfrow = c(1, 2))  # Set up a side-by-side plot layout
+
+# Create histogram for the t-distribution
+hist(t_sample, xlim = c(-5, 5), main = "t-Distribution (df=5)", xlab = "Value", col = scales::alpha("red", 0.5), add = TRUE)
+
+# Add a legend to differentiate the histograms
+legend("topright", c("Normal", "t-distribution"), col = c("blue", "red"), fill = c("blue", "red"))
+```
+
+### Question 5
+
+a.  From the Vanguard dataset, compute the standard error of the mean for the `VFIAX` index fund return
+
+    ***Answer:***
+
+    ```{r}
+    library(DataAnalytics)
+    library(reshape2)
+
+    data(Vanguard)
+    #head(Vanguard)
+
+    vfiax_data = Vanguard[Vanguard$ticker == "VFIAX", ]
+
+    # Calculate the mean of the 'mret' column
+    mean_mret_vifax = mean(vfiax_data$mret, na.rm = TRUE)
+
+    # Calculate the standard error of the mean (SE Mean)
+    se_mean_vifax = sd(vfiax_data$mret, na.rm = TRUE) / sqrt(sum(!is.na(vfiax_data$mret)))
+
+    # Print the mean and SE Mean
+    cat("Mean of 'mret' for VFIAX:", mean_mret_vifax, "\n")
+    cat("SE Mean of 'mret' for VFIAX:", se_mean_vifax, "\n")
+
+    ```
+
+b.  For this fund, the mean and the standard error of the mean are almost exactly the same. Why is this a problem for a financial analyst who wants to assess the performance of this fund?
+
+    ***Answer:***
+
+    *The mean and the standard error of the mean (SE Mean) are almost exactly the same for a financial fund, it can be problematic for a financial analyst who wants to assess the performance of the fund. Here's why it's a problem:*
+
+    *Lack of Precision: The SE Mean measures the precision or reliability of the mean estimate. If the SE Mean is nearly the same as the mean, it indicates that the sample size is relatively small. In practical terms, it means that the estimate of the mean return is not very precise.*
+
+    *High Uncertainty: A small sample size leads to high uncertainty in the estimate. This means that the mean return calculated is subject to a significant amount of variability, and the true mean return for the fund could be quite different. As a financial analyst, you want more confidence in the estimate.*
+
+    *Risk of Misinterpretation: Without sufficient sample size, there is a risk that analysts and investors might make investment decisions based on an imprecise estimate of fund performance. This could lead to incorrect assessments of the fund's risk and return characteristics.*
+
+c.  Calculate the size of the sample which would be required to reduce the standard error of the mean to 1/10th of the size of the mean return.
+
+    ***Answer:***
+
+    ```{r}
+
+    size_new = 100*nrow(vfiax_data)
+    cat("size of the sample which would be required to reduce the standard error of the mean to 1/10th of the size of the mean return.", size_new)
+    ```
+
+### Question 6 : Subsetting Observations
+
+### Q6, Part A
+
+1.  Display the contents of the first 50 elements of the vector, `cars$make == "Ford"`, to verify that it is a logical vector.
+
+    ***Answer:***
+
+    ```{r}
+    library(DataAnalytics) 
+    data(mvehicles)
+    head(mvehicles)
+
+    cars=mvehicles[mvehicles$bodytype != "Truck",] 
+    fords = cars[cars$make == "Ford",]
+    head(fords, 50)
+
+    ```
+
+2.  Subset the `cars` data frame by a two step process to only the "Ford" make. That is, create the row selection logical vector in one statement and select observations from the `cars` data frame in the second.
+
+    ***Answer:***
+
+    ```{r}
+    #subset condition
+    row_selection = cars$make == "Ford"
+    # Step 2: Select observations that meet the condition
+    ford_cars = cars[row_selection, ]
+    head(ford_cars)
+
+    ```
+
+3.  How many Kia observations are there in the `cars` data frame? hint: `nrow()` tells you how many rows are in a data frame.
+
+    ***Answer:***
+
+    ```{r}
+    kia = nrow(cars[cars$make=="Kia",])
+    cat("No of Kia Cars",kia)
+
+    ```
+
+4.  How many cars are have a price (emv) that is greater than \$100,000?
+
+    ***Answer:***
+
+    ```{r}
+
+    price_100k = nrow(cars[cars$emv >100000,])
+    cat("No of Cars price more than 100k is",price_100k)
+
+    ```
+
+### Q6, part B
+
+1.  What is the average sales for all cars made in Europe with price above \$75,000?
+
+    ***Answer:***
+
+    ```{r}
+
+    filtered_cars = cars[cars$origin == "Europe" & cars$emv > 75000, ]
+    average_sales = mean(filtered_cars$sales)
+    cat("Average sales for cars made in Europe with price above $75,000 is", average_sales, "\n")
+    ```
+
+### Q 6, part C
+
+1.  How many four door vehicles are in cars?
+
+    ***Answer:***
+
+    ```{r}
+    four_door_vehicles = sum(grepl("4dr", cars$style, ignore.case = TRUE))
+
+    cat("Number of four-door vehicle is", four_door_vehicles, "\n")
+
+
+    ```
+
+2.  How many four door sedans are in cars?
+
+    ***Answer:***
+
+    ```{r}
+    # Find the number of four-door sedans
+
+    four_door_sedans <- sum((cars$bodytype == "Sedan") & grepl("4dr", cars$style, ignore.case = TRUE))
+
+    cat("Number of four-door sedans is", four_door_sedans, "\n") 
+
+    ```
+
+### Question 7 : Sales and Price relationships
+
+### Q7, part A
+
+Plot price (horizontal axis) vs. sales (vertical axis) for cars with bodytype == "Sedan". What is the problem with displaying the data in this manner?
+
+***Answer:***
+
+```{r}
+cars_sedan = cars[cars$bodytype=="Sedan",]
+print(cars_sedan)
+plot(cars_sedan$emv, cars_sedan$sales, xlab = "price", ylab = "sale")
+
+```
+
+*Problem: Range is high, so many data points overlapped and difficult to identify the pattern, interpret the data and very bad model for linear regression.*
+
+### Q7, part B
+
+Plot log(price) vs. log(sales) for the same subset of observations as in part 1. How has this improved the visualization of this data? Are there any disadvantages of taking the log transformation? A very similar but less "violent" tranformation is the sqrt transformation. Try the sqrt transformation. Is this useful?
+
+***Answer:***
+
+```{r}
+cars_sedan$log_sales = log(cars_sedan$sales)
+cars_sedan$log_price = log(cars_sedan$emv)
+
+model = lm(log_sales ~ log_price, data= cars_sedan)
+
+# Create a scatterplot of the data
+plot(cars_sedan$log_price, cars_sedan$log_sales, xlab = "log(price)", ylab = "log(sales)", main = "Linear Regression")
+
+```
+
+1.  *By taking the logarithm, we can make the scale of the data more interpretable and less sensitive to extreme values. This can help in visualizing relationships that span multiple orders of magnitude.*
+
+2.  *By taking the logarithm of one or both variables can make the relationship more linear. This can help in detecting trends and making predictions.*
+
+3.  *Log-transformed data may not be accurate, as values on the plot are not in the original scale.*
+
+4.  *When taking the log of values close to zero, negative infinity or negative values can be produced.*
+
+5.  ***Sqrt Transformation**: The square root (sqrt) transformation is a milder alternative to the log transformation. While it helps reduce the impact of extreme values and improve the linearity of the relationship, it doesn't handle very large ranges as effectively as the log transformation.*
+
+### Q7, part C
+
+Economists will tell you that as price increase sales will decreases, all other things being equal. Does this plot support this conclusion?
+
+***Answer:***
+
+*In the scatter plot of **`log(price)`**vs. **`log(sales)`** we can assess the direction of the relationship between price and sales. If you observe that the data points tend to follow a negative slope (as the transformed price increases, the transformed sales decrease), it would support the notion of decreasing sales as price increases, all other factors being equal.*
+
+### Q7, part D
+
+Fit a regression model to this data. That is, "regress" log(sales) on log(price) (log(sales) is Y or the dependent variable). Plot the fitted line on top of the scatterplot using `abline`.
+
+***Answer***
+
+```{r}
+
+# Create a scatterplot of the data
+plot(cars_sedan$log_price, cars_sedan$log_sales, xlab = "log(price)", ylab = "log(sales)", main = "Linear Regression")
+
+# Add the fitted regression line to the plot
+abline(model, col = "red")
+
+```
+
+### Q7, part E
+
+Predict sales for price = \$45,000 using the model fit in part D). Don't forget to transform back to unit sales by using the `exp()` function.
+
+***Answer***
+
+```{r}
+# Given price
+given_price = 45000
+
+# Transform the given price to log(price)
+log_given_price = log(given_price)
+
+# Predict log(sales) using the fitted model
+predicted_log_sales = predict(model, newdata = data.frame(log_price = log_given_price))
+
+# Transform the predicted log(sales) back to unit sales
+predicted_sales = exp(predicted_log_sales)
+
+# Print the predicted sales
+cat("Predicted sales for price $45,000:", predicted_sales, "\n")
+
+
+```
